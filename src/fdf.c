@@ -6,50 +6,50 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 20:07:08 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/01/11 02:51:54 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/01/12 04:47:37 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-static void	my_mlx_pixel_put(t_img *data, int x, int y, int color)
+static void	my_mlx_pixel_put(t_img *data, float x, float y, int color)
 {
 	char	*dst;
 
-	dst = data->address + (y * data->line_l + x * (data->bpp / 8));
-	*(unsigned int*)dst = color;
-}
-
-static void	print_map(int y, int x, t_args *args, t_map **start)
-{
-	int	n_length = 0;
-	int	i;
-	int	n_width = 0;
-	t_map	*map;
-
-	map = *start;
-	while (map)
+	if (x <= LENGTH && x >= 0 && y <= HEIGHT && y >= 0)
 	{
-		n_length = 0;
-		i = 0;
-		while (n_length < args->size_x)
-		{
-			my_mlx_pixel_put(args->img, x + i, y + n_width, 0xFF00FFFF + map->row[n_length] * 20);
-			if (i != 0 && i % (1920 / args->size_x) == 0)
-				++n_length;
-			++i;
-		}
-		++n_width;
-		if (n_width != 0 && n_width % (1080 / args->size_y) == 0)
-			map = map->next;
+		dst = data->address + (int)(y * data->line_l + x * (data->bpp / 8));
+		*(unsigned int *)dst = color;
 	}
 }
 
-int	close_win(int keycode, t_vars *vars)
+static void	print_map(t_args *args, t_map **start)
 {
-	if (keycode == 65307)
-		mlx_destroy_window(vars->mlx, vars->window);
-	return (keycode);
+	t_3_vectors	point;
+	t_2_vectors	coords;
+	t_map		*map;
+	int			i;
+
+	map = *start;
+	point.y = 0;
+	while (map)
+	{
+		point.x = 0;
+		i = 0;
+		while (i < args->size_x)
+		{
+			point.z = map->row[i];
+			coords.x = point.x + cosf(120) * point.z;
+			coords.y = point.y + sinf(120) * point.z;
+//			coords.x = point.x * cosf(120) + point.y * cosf(122) + point.z * cosf(118);
+//			coords.y = point.x * sinf(120) + point.y * sinf(122) + point.z * sinf(118);
+			my_mlx_pixel_put(args->img, coords.x, coords.y, 0x00FFFFFF);
+			point.x += 1;
+			++i;
+		}
+		point.y += 1;
+		map = map->next;
+	}
 }
 
 static void	init_args(t_args *args)
@@ -66,19 +66,23 @@ static void	init_args(t_args *args)
 int	main(int argc, char **argv)
 {
 	t_args	*args;
-	
+
 	if (argc != 2)
 		exit_miss_args();
 	args = parsing(argv);
 	init_args(args);
-	args->vars->window = mlx_new_window(args->vars->mlx, 1920, 1080, argv[1]);
-	args->img->image = mlx_new_image(args->vars->mlx, 1920, 1080);
+	args->vars->window = mlx_new_window(args->vars->mlx, LENGTH, HEIGHT,
+			argv[1]);
+	args->img->image = mlx_new_image(args->vars->mlx, LENGTH, HEIGHT);
 	args->img->address = mlx_get_data_addr(args->img->image, &args->img->bpp,
-						&args->img->line_l, &args->img->endian);
-	print_map(0, 0, args, &args->map);
+			&args->img->line_l, &args->img->endian);
+	print_map(args, &args->map);
 	mlx_put_image_to_window(args->vars->mlx, args->vars->window,
-						args->img->image, 0, 0);
-	mlx_hook(args->vars->window, 2, 1L<<0, close_win, args->vars);
+		args->img->image, 0, 0);
+	mlx_hook(args->vars->window, KEYDOWN, 1L << 0, key_switch, args);
+	mlx_hook(args->vars->window, DESTROY, 1L << 0, close_window, args);
 	mlx_loop(args->vars->mlx);
 	exit_msg(args, NULL, 1, 0);
+	// Free
+	// mlx_loop_end(void *mlx_ptr)
 }

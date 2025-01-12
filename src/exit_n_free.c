@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 23:02:22 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/01/11 00:21:45 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/01/11 22:01:19 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,10 @@ static void	ft_free(t_args *args)
 		free(args->map);
 		args->map = node;
 	}
+	if (args && args->img)
+		free(args->img);
+	if (args && args->vars)
+		free(args->vars);
 	if (args)
 		free(args);
 }
