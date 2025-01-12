@@ -39,10 +39,8 @@ static void	print_map(t_args *args, t_map **start)
 		while (i < args->size_x)
 		{
 			point.z = map->row[i];
-			coords.x = point.x + cosf(120) * point.z;
-			coords.y = point.y + sinf(120) * point.z;
-//			coords.x = point.x * cosf(120) + point.y * cosf(122) + point.z * cosf(118);
-//			coords.y = point.x * sinf(120) + point.y * sinf(122) + point.z * sinf(118);
+			coords.x = point.y * cos(210) + point.x * cos(-30);
+			coords.y = point.y * sin(210) + point.x * sin(-30) + point.z * sin(90);
 			my_mlx_pixel_put(args->img, coords.x, coords.y, 0x00FFFFFF);
 			point.x += 1;
 			++i;

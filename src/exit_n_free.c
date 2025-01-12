@@ -20,10 +20,8 @@ void	exit_miss_args()
 
 static void	ft_free(t_args *args)
 {
-	int	i;
 	t_map	*node;
 
-	i = 0;
 	while (args && args->map)
 	{
 		if (args->map->row)

@@ -14,9 +14,6 @@
 
 static void	put_in_array(char *nb, int size, long long n)
 {
-	int	i;
-
-	i = 0;
 	if (n < 0)
 	{
 		nb[0] = '-';
