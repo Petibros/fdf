@@ -1,20 +1,18 @@
 CC=cc
 NAME = fdf 
-SRCS = src/exit_n_free.c src/fdf.c src/parsing.c src/window_gestion.c
+SRCS = src/exit_n_free.c src/fdf.c src/parsing.c src/window_gestion.c src/draw.c
 HEADER = src/fdf.h
 OBJS = $(SRCS:.c=.o)
 CFLAGS = -Wall -Wextra -Werror -g -I libft -I minilibx-linux
-LDFLAGS =  $(LIBFT) $(shell pkg-config --libs x11 xext)
-MLXFLAGS = $(MLX)
-
 MLX = minilibx-linux/libmlx.a
+LDFLAGS =  $(LIBFT) $(MLX) $(shell pkg-config --libs x11 xext)
 
 LIBFT = libft/libft.a
 
 all:$(NAME)
 
 $(NAME): $(OBJS) $(LIBFT) $(MLX)
-	$(CC) $(OBJS) $(LDFLAGS) $(MLXFLAGS) -o $(NAME) -lm
+	$(CC) $(OBJS) $(LDFLAGS) -o $(NAME) -lm
 
 %.o : %.c $(HEADER)
 	$(CC) $(CFLAGS) $< -c -o $@

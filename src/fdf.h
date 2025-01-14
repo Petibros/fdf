@@ -14,7 +14,7 @@
 # define FDF_H
 
 # define HEIGHT 720
-# define LENGTH 1280
+# define LENGTH 1560
 
 # include "mlx.h"
 # include "libft.h"
@@ -72,10 +72,17 @@ typedef struct s_args
 	t_map	*map;
 	t_vars	*vars;
 	t_img	*img;
+	int		x;
+	int		y;
+	int		scale;
 	int		size_x;
 	int		size_y;
 }	t_args;
 
+int		render_frame(t_args *args);
+void	my_mlx_pixel_put(t_img *data, float x, float y, int color);
+void	print_map(t_args *args, t_map **start);
+void	reset_image(t_img *image);
 int		key_switch(int keycode, t_args *args);
 int		close_window(t_args *args);
 void	exit_miss_args(void);

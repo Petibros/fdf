@@ -12,44 +12,6 @@
 
 #include "fdf.h"
 
-static void	my_mlx_pixel_put(t_img *data, float x, float y, int color)
-{
-	char	*dst;
-
-	if (x <= LENGTH && x >= 0 && y <= HEIGHT && y >= 0)
-	{
-		dst = data->address + (int)(y * data->line_l + x * (data->bpp / 8));
-		*(unsigned int *)dst = color;
-	}
-}
-
-static void	print_map(t_args *args, t_map **start)
-{
-	t_3_vectors	point;
-	t_2_vectors	coords;
-	t_map		*map;
-	int			i;
-
-	map = *start;
-	point.y = 0;
-	while (map)
-	{
-		point.x = 0;
-		i = 0;
-		while (i < args->size_x)
-		{
-			point.z = map->row[i];
-			coords.x = point.y * cos(210) + point.x * cos(-30);
-			coords.y = point.y * sin(210) + point.x * sin(-30) + point.z * sin(90);
-			my_mlx_pixel_put(args->img, coords.x, coords.y, 0x00FFFFFF);
-			point.x += 1;
-			++i;
-		}
-		point.y += 1;
-		map = map->next;
-	}
-}
-
 static void	init_args(t_args *args)
 {
 	args->vars = malloc(sizeof(t_vars));
@@ -59,6 +21,9 @@ static void	init_args(t_args *args)
 	if (!args->img)
 		exit_msg(args, "Failed to alloc img", 1, 1);
 	args->vars->mlx = mlx_init();
+	args->scale = 30;
+	args->x = LENGTH / 4;
+	args->y = (HEIGHT / 4) * 3;
 }
 
 int	main(int argc, char **argv)
@@ -79,6 +44,7 @@ int	main(int argc, char **argv)
 		args->img->image, 0, 0);
 	mlx_hook(args->vars->window, KEYDOWN, 1L << 0, key_switch, args);
 	mlx_hook(args->vars->window, DESTROY, 1L << 0, close_window, args);
+	mlx_loop_hook(args->vars->mlx, render_frame, args);
 	mlx_loop(args->vars->mlx);
 	exit_msg(args, NULL, 1, 0);
 	// Free
