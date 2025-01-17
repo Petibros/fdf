@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 02:42:14 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/01/12 02:32:02 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/01/17 06:30:08 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define FDF_H
 
 # define HEIGHT 720
-# define LENGTH 1560
+# define LENGTH 1320
 
 # include "mlx.h"
 # include "libft.h"
@@ -60,33 +60,33 @@ typedef struct s_vars
 	void	*window;
 }	t_vars;
 
-typedef struct s_map
-{
-	int				*row;
-	struct s_map	*next;
-}	t_map;
-
 typedef struct s_args
 {
-	int		fd;
-	t_map	*map;
-	t_vars	*vars;
-	t_img	*img;
-	int		x;
-	int		y;
-	int		scale;
-	int		size_x;
-	int		size_y;
+	int			fd;
+	int			**map;
+	t_vars		*vars;
+	t_img		*img;
+	float		height;
+	int			start_x;
+	int			start_y;
+	float		scale;
+	t_3_vectors	rotates;
+	int			size_x;
+	int			size_y;
 }	t_args;
 
-int		render_frame(t_args *args);
-void	my_mlx_pixel_put(t_img *data, float x, float y, int color);
-void	print_map(t_args *args, t_map **start);
-void	reset_image(t_img *image);
-int		key_switch(int keycode, t_args *args);
-int		close_window(t_args *args);
-void	exit_miss_args(void);
-void	exit_msg(t_args *args, char *msg, int close_fd, int status);
-t_args	*parsing(char **argv);
+void		get_rotates(t_args *args, int keycode);
+t_3_vectors	apply_rotate(t_args *args, t_3_vectors points);
+void		change_height(t_args *args, int keycode);
+void		draw_line(t_args *args, t_2_vectors coords_1, t_2_vectors coords_2);
+int			render_frame(t_args *args);
+void		my_mlx_pixel_put(t_img *data, int x, int y, int color);
+void		print_map(t_args *args);
+void		reset_image(t_img *image);
+int			key_switch(int keycode, t_args *args);
+int			close_window(t_args *args);
+void		exit_miss_args(void);
+void		exit_msg(t_args *args, char *msg, int close_fd, int status);
+t_args		*parsing(char **argv);
 
 #endif

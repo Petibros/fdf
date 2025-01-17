@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 01:46:42 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/01/11 02:01:04 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/01/16 01:16:55 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,7 @@ static int	count_numbers(char *line)
 	n = 0;
 	while (line[i])
 	{
-		while (line[i] && ((line[i] != '-' && line[i] != '+')
-			|| !ft_isdigit(line[i + 1])) && !ft_isdigit(line[i]))
+		while (line[i] && (line[i] == ' ' || line[i] == '\n'))
 			++i;
 		if (!line[i])
 			break ;
@@ -31,25 +30,25 @@ static int	count_numbers(char *line)
 			++i;
 		while (ft_isdigit(line[i]))
 			++i;
+		if (line[i] == ',')
+		{
+			while (line[i] && line[i] != ' ')
+				++i;
+		}
 	}
 	return (n);
 }
 
-static int	*put_in_tab(char *line, t_args *args)
+static void	put_in_tab(char *line, t_args *args, int *tab)
 {
-	int	*tab;
 	int	n;
 	int	i;
 
-	tab = malloc(count_numbers(line) * sizeof(int));
-	if (!tab)
-		exit_msg(args, "Failed to alloc tab", 1, 1);
 	i = 0;
 	n = 0;
 	while (line[i])
 	{
-		while (line[i] && ((line[i] != '-' && line[i] != '+')
-			|| !ft_isdigit(line[i + 1])) && !ft_isdigit(line[i]))
+		while (line[i] && (line[i] == ' ' || line[i] == '\n'))
 			++i;
 		if (!line[i])
 			break ;
@@ -59,45 +58,53 @@ static int	*put_in_tab(char *line, t_args *args)
 			++i;
 		while (ft_isdigit(line[i]))
 			++i;
+		if (line[i] == ',')
+		{
+			while (line[i] && line[i] != ' ')
+				++i;
+		}
 	}
 	args->size_x = n;
-	return (tab);
 }
 
-static t_map	*alloc_rows(t_args *args)
-{
-	t_map	*node;
-
-	node = malloc(sizeof(t_map));
-	if (!node)
-		exit_msg(args, "Failed to alloc a node", 1, 1);
-	node->next = NULL;
-	node->row = NULL;
-	return (node);
-}
-
-static void	read_map(t_args *args, t_map **start)
+static void	read_map(t_args *args)
 {
 	char	*line;
-	int		n;
-	t_map	*map;
+	int		i;
 
-	map = *start;
-	n = 1;
+	i = 0;
 	line = get_next_line(args->fd);
 	while (1)
 	{
-		map->row = put_in_tab(line, args);
+		args->map[i] = malloc(count_numbers(line) * sizeof(int));
+		if (!args->map[i])
+			exit_msg(args, "Failed to alloc tab", 1, 1);
+		put_in_tab(line, args, args->map[i]);
 		free(line);
 		line = get_next_line(args->fd);
 		if (!line)
 			break ;
-		map->next = alloc_rows(args);
-		++n;
-		map = map->next;
+		++i;
 	}
+}
+
+int	count_line(t_args *args, char *file)
+{
+	char	*line;
+	int		n;
+
+	n = 0;
+	line = get_next_line(args->fd);
+	while (line)
+	{
+		free(line);
+		line = get_next_line(args->fd);
+		++n;
+	}
+	close(args->fd);
+	args->fd = open(file, O_RDONLY);
 	args->size_y = n;
-	map->next = NULL;
+	return (n);
 }
 
 t_args	*parsing(char **argv)
@@ -110,9 +117,9 @@ t_args	*parsing(char **argv)
 	args->fd = open(argv[1], O_RDONLY);
 	if (args->fd == -1)
 		exit_msg(args, "Invalid file", 0, 1);
-	args->map = malloc(sizeof(t_map));
-	if (!args->map)	
+	args->map = malloc(count_line(args, argv[1]) * sizeof(int *));
+	if (!args->map)
 		exit_msg(args, "Failed to alloc map", 1, 1);
-	read_map(args, &args->map);
+	read_map(args);
 	return (args);
 }

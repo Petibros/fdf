@@ -6,13 +6,13 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 23:02:22 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/01/11 22:01:19 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/01/16 01:06:12 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void	exit_miss_args()
+void	exit_miss_args(void)
 {
 	write(2, "Usage :\n./fdf <FILE>\n", 21);
 	exit (1);
@@ -20,16 +20,16 @@ void	exit_miss_args()
 
 static void	ft_free(t_args *args)
 {
-	t_map	*node;
+	int	i;
 
-	while (args && args->map)
+	i = 0;
+	while (args && args->map && i < args->size_y && args->map[i])
 	{
-		if (args->map->row)
-			free(args->map->row);
-		node = args->map->next;
-		free(args->map);
-		args->map = node;
+		free(args->map[i]);
+		++i;
 	}
+	if (args && args->map)
+		free(args->map);
 	if (args && args->img)
 		free(args->img);
 	if (args && args->vars)

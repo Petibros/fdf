@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 20:07:08 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/01/12 04:47:37 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/01/17 06:25:51 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,13 @@ static void	init_args(t_args *args)
 	if (!args->img)
 		exit_msg(args, "Failed to alloc img", 1, 1);
 	args->vars->mlx = mlx_init();
-	args->scale = 30;
-	args->x = LENGTH / 4;
-	args->y = (HEIGHT / 4) * 3;
+	args->scale = 1 + 1000 / (args->size_y + args->size_x);
+	args->height = 1;
+	args->rotates.x = 0;
+	args->rotates.y = 0;
+	args->rotates.z = 0;
+	args->start_x = LENGTH / 4;
+	args->start_y = (HEIGHT / 4) * 3;
 }
 
 int	main(int argc, char **argv)
@@ -39,7 +43,7 @@ int	main(int argc, char **argv)
 	args->img->image = mlx_new_image(args->vars->mlx, LENGTH, HEIGHT);
 	args->img->address = mlx_get_data_addr(args->img->image, &args->img->bpp,
 			&args->img->line_l, &args->img->endian);
-	print_map(args, &args->map);
+	print_map(args);
 	mlx_put_image_to_window(args->vars->mlx, args->vars->window,
 		args->img->image, 0, 0);
 	mlx_hook(args->vars->window, KEYDOWN, 1L << 0, key_switch, args);
