@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 20:07:08 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/01/17 06:25:51 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/01/18 10:33:53 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ int	main(int argc, char **argv)
 		args->img->image, 0, 0);
 	mlx_hook(args->vars->window, KEYDOWN, 1L << 0, key_switch, args);
 	mlx_hook(args->vars->window, DESTROY, 1L << 0, close_window, args);
+	mlx_hook(args->vars->window, 6, 1L << 10, mouse_translation, args);
+	mlx_mouse_hook(args->vars->window, mouse_gestion, args);
 	mlx_loop_hook(args->vars->mlx, render_frame, args);
 	mlx_loop(args->vars->mlx);
 	exit_msg(args, NULL, 1, 0);

@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 02:42:14 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/01/17 06:30:08 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/01/18 10:24:26 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ typedef struct s_args
 	t_vars		*vars;
 	t_img		*img;
 	float		height;
+	t_2_vectors	last_pos;
 	int			start_x;
 	int			start_y;
 	float		scale;
@@ -75,8 +76,11 @@ typedef struct s_args
 	int			size_y;
 }	t_args;
 
+int			mouse_translation(int x, int y, t_args *args);
+int			mouse_reset(int x, int y, t_args *args);
+int			mouse_gestion(int button, int x, int y, t_args *args);
 void		get_rotates(t_args *args, int keycode);
-t_3_vectors	apply_rotate(t_args *args, t_3_vectors points);
+t_3_vectors	apply_rotate(t_args *args, t_3_vectors points, t_2_vectors center);
 void		change_height(t_args *args, int keycode);
 void		draw_line(t_args *args, t_2_vectors coords_1, t_2_vectors coords_2);
 int			render_frame(t_args *args);

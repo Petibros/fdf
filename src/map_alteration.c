@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 01:47:06 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/01/17 07:28:20 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/01/18 08:52:13 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,17 @@ void	get_rotates(t_args *args, int keycode)
 		args->rotates.x += 1;
 }
 
-t_3_vectors	apply_rotate(t_args *args, t_3_vectors points)
+t_3_vectors	apply_rotate(t_args *args, t_3_vectors points, t_2_vectors center)
 {
 	t_3_vectors	final_points;
 	t_3_vectors	theta;
 
+	points.x -= center.x;
+	points.y -= center.y;
+
 	theta.x = args->rotates.x * M_PI / 180;
 	theta.y = args->rotates.y * M_PI / 180;
 	theta.z = args->rotates.z * M_PI / 180;
-
 
 	final_points.x = cosf(theta.z) * points.x - sinf(theta.z) * points.y;
 	final_points.y = sinf(theta.z) * points.x + cosf(theta.z) * points.y;
@@ -57,5 +59,8 @@ t_3_vectors	apply_rotate(t_args *args, t_3_vectors points)
 	final_points.x = points.x;
 	final_points.y = cosf(theta.x) * points.y - sinf(theta.x) * points.z;
 	final_points.z = sinf(theta.x) * points.y + cosf(theta.x) * points.z;
+
+	points.x += center.x;
+	points.y += center.y;
 	return (final_points);
 }

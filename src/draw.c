@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 09:40:34 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/01/17 06:47:30 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/01/18 09:22:57 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,10 @@ void	print_map(t_args *args)
 {
 	t_3_vectors	point;
 	t_3_vectors	next;
+	t_2_vectors	center;
 
+	center.x = args->size_x / 2;
+	center.y = args->size_y / 2;
 	point.y = 0;
 	while (point.y < args->size_y)
 	{
@@ -119,14 +122,14 @@ void	print_map(t_args *args)
 				next.z = args->map[(int)point.y][(int)point.x + 1];
 				next.y = point.y;
 				next.x = point.x + 1;
-				draw_x_axis(args, apply_rotate(args, point), apply_rotate(args, next));
+				draw_x_axis(args, apply_rotate(args, point, center), apply_rotate(args, next, center));
 			}
 			if (point.y + 1 < args->size_y)
 			{
 				next.z = args->map[(int)point.y + 1][(int)point.x];
 				next.y = point.y + 1;
 				next.x = point.x;
-				draw_y_axis(args, apply_rotate(args, point), apply_rotate(args, next));
+				draw_y_axis(args, apply_rotate(args, point, center), apply_rotate(args, next, center));
 			}
 			point.x += 1;
 		}
