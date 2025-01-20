@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 09:40:34 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/01/18 09:22:57 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/01/20 09:08:28 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,12 +74,12 @@ static void	draw_x_axis(t_args *args, t_3_vectors points, t_3_vectors next)
 	coords_1.x = ((points.x * cosf((30 * M_PI) / 180) - points.y
 				* cosf((30 * M_PI) / 180)) * args->scale) + args->start_x;
 	coords_1.y = (points.x * sinf((30 * M_PI) / 180)
-			+ points.y * sinf((30 * M_PI) / 180)) - (points.z * args->height);
+			+ points.y * sinf((30 * M_PI) / 180)) - points.z;
 	coords_1.y = coords_1.y * args->scale + args->start_y;
 	coords_2.x = ((next.x * cosf((30 * M_PI) / 180) - next.y
 				* cosf((30 * M_PI) / 180)) * args->scale) + args->start_x;
 	coords_2.y = (next.x * sinf((30 * M_PI) / 180) + next.y
-			* sinf((30 * M_PI) / 180)) - (next.z * args->height);
+			* sinf((30 * M_PI) / 180)) - next.z;
 	coords_2.y = coords_2.y * args->scale + args->start_y;
 	draw_line(args, coords_1, coords_2);
 }
@@ -92,12 +92,12 @@ static void	draw_y_axis(t_args *args, t_3_vectors points, t_3_vectors next)
 	coords_1.x = ((points.x * cosf((30 * M_PI) / 180) - points.y
 				* cosf((30 * M_PI) / 180)) * args->scale) + args->start_x;
 	coords_1.y = (points.x * sinf((30 * M_PI) / 180)
-			+ points.y * sinf((30 * M_PI) / 180)) - (points.z * args->height);
+			+ points.y * sinf((30 * M_PI) / 180)) - points.z;
 	coords_1.y = coords_1.y * args->scale + args->start_y;
 	coords_2.x = ((next.x * cosf((30 * M_PI) / 180) - next.y
 				* cosf((30 * M_PI) / 180)) * args->scale) + args->start_x;
 	coords_2.y = (next.x * sinf((30 * M_PI) / 180) + next.y
-			* sinf((30 * M_PI) / 180)) - (next.z * args->height);
+			* sinf((30 * M_PI) / 180)) - next.z;
 	coords_2.y = coords_2.y * args->scale + args->start_y;
 	draw_line(args, coords_1, coords_2);
 }
@@ -106,30 +106,27 @@ void	print_map(t_args *args)
 {
 	t_3_vectors	point;
 	t_3_vectors	next;
-	t_2_vectors	center;
 
-	center.x = args->size_x / 2;
-	center.y = args->size_y / 2;
 	point.y = 0;
 	while (point.y < args->size_y)
 	{
 		point.x = 0;
 		while (point.x < args->size_x)
 		{
-			point.z = args->map[(int)point.y][(int)point.x];
+			point.z = args->map[(int)point.y][(int)point.x] * args->height;
 			if (point.x + 1 < args->size_x)
 			{
-				next.z = args->map[(int)point.y][(int)point.x + 1];
+				next.z = args->map[(int)point.y][(int)point.x + 1] * args->height;
 				next.y = point.y;
 				next.x = point.x + 1;
-				draw_x_axis(args, apply_rotate(args, point, center), apply_rotate(args, next, center));
+				draw_x_axis(args, apply_rotate(args, point), apply_rotate(args, next));
 			}
 			if (point.y + 1 < args->size_y)
 			{
-				next.z = args->map[(int)point.y + 1][(int)point.x];
+				next.z = args->map[(int)point.y + 1][(int)point.x] * args->height;
 				next.y = point.y + 1;
 				next.x = point.x;
-				draw_y_axis(args, apply_rotate(args, point, center), apply_rotate(args, next, center));
+				draw_y_axis(args, apply_rotate(args, point), apply_rotate(args, next));
 			}
 			point.x += 1;
 		}

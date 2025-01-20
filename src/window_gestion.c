@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 00:01:36 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/01/18 10:28:52 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/01/20 07:52:15 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,13 @@ static void	translation(t_args *args, int keycode)
 static void	zoom(t_args *args, int keycode)
 {
 	if (keycode == 65362 || keycode == 4)
+	{
 		args->scale += 0.005 + fabsf(args->scale / 10);
-	else
-		args->scale -= 0.005 + fabsf(args->scale / 10);
+		args->button = 4;
+		return ;
+	}
+	args->scale -= 0.005 + fabsf(args->scale / 10);
+	args->button = 5;
 }
 
 int	close_window(t_args *args)
@@ -50,12 +54,31 @@ int	mouse_reset(int x, int y, t_args *args)
 	return (0);
 }
 
-int	mouse_translation(int x, int y, t_args *args)
+void	center_map(t_args *args)
 {
-	args->start_x += x - args->last_pos.x;
-	args->start_y += y - args->last_pos.y;
+	float	dx;
+	float	dy;
+
+	dx = ((args->size_x / 2) * cosf((30 * M_PI) / 180) - (args->size_y / 2) * cosf((30 * M_PI) / 180));
+	dy = ((args->size_x / 2) * sinf((30 * M_PI) / 180) + (args->size_y / 2) * sinf((30 * M_PI) / 180));
+
+	args->start_x = (LENGTH / 2) - dx * args->scale;
+	args->start_y = (HEIGHT / 2) - dy * args->scale;
+}
+
+int	mouse_movement(int x, int y, t_args *args)
+{
+	if (args->button == 3)
+	{
+		args->start_x += (x - args->last_pos.x) / (args->size_x / args->size_y);
+		args->start_y += y - args->last_pos.y;
+	}
+	else if (args->button == 1)
+	{
+		args->rotates.x -= y - args->last_pos.y;
+		args->rotates.y -= x - args->last_pos.x;
+	}
 	mouse_reset(x, y, args);
-	printf("%d;%d\n", x, y);
 	return (0);
 }
 
@@ -63,8 +86,17 @@ int	mouse_gestion(int button, int x, int y, t_args *args)
 {
 	if (button == 4 || button == 5)
 		zoom(args, button);
-	else if (button == 3)
+	if (button == 3 || button == 1)
 		mouse_reset(x, y, args);
+	if (button == 2)
+	{
+		center_map(args);
+		args->button = 2;
+	}
+	else if (button == 1)
+		args->button = 1;
+	else if (button == 3)
+		args->button = 3;
 	printf("%d;%d   %d\n", x, y, button);
 	return (0);
 }
@@ -83,8 +115,6 @@ int	key_switch(int keycode, t_args *args)
 	else if (keycode == 65432 || keycode == 65429 || keycode == 65430
 		|| keycode == 65431 || keycode == 65437 || keycode == 65434)
 		get_rotates(args, keycode);
-	printf("%d \n", keycode);
-	printf("%f %f %f\n", args->rotates.y, args->rotates.z, args->rotates.x);
 	return (0);
 }
 

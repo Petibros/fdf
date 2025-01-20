@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 02:42:14 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/01/18 10:24:26 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/01/20 07:45:27 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ typedef struct s_args
 {
 	int			fd;
 	int			**map;
+	int			highest;
+	int			lowest;
 	t_vars		*vars;
 	t_img		*img;
 	float		height;
@@ -71,16 +73,18 @@ typedef struct s_args
 	int			start_x;
 	int			start_y;
 	float		scale;
-	t_3_vectors	rotates;
+	t_2_vectors	rotates;
 	int			size_x;
 	int			size_y;
+	int			button;
 }	t_args;
 
-int			mouse_translation(int x, int y, t_args *args);
+void		center_map(t_args *args);
+int			mouse_movement(int x, int y, t_args *args);
 int			mouse_reset(int x, int y, t_args *args);
 int			mouse_gestion(int button, int x, int y, t_args *args);
 void		get_rotates(t_args *args, int keycode);
-t_3_vectors	apply_rotate(t_args *args, t_3_vectors points, t_2_vectors center);
+t_3_vectors	apply_rotate(t_args *args, t_3_vectors points);
 void		change_height(t_args *args, int keycode);
 void		draw_line(t_args *args, t_2_vectors coords_1, t_2_vectors coords_2);
 int			render_frame(t_args *args);
