@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 00:01:36 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/01/20 07:52:15 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/01/21 08:53:19 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,28 @@ static void	translation(t_args *args, int keycode)
 
 static void	zoom(t_args *args, int keycode)
 {
+	float		scale_factor;
+	t_2_vectors	vector;
+
+	vector.x = args->last_pos.x - args->start_x; 
+	vector.y = args->last_pos.y - args->start_y; 
+	scale_factor = 1.1;
+
 	if (keycode == 65362 || keycode == 4)
 	{
-		args->scale += 0.005 + fabsf(args->scale / 10);
+		args->scale *= scale_factor;
 		args->button = 4;
-		return ;
+		args->start_x += (vector.x - vector.x * scale_factor);
+		args->start_y += (vector.y - vector.y * scale_factor);
 	}
-	args->scale -= 0.005 + fabsf(args->scale / 10);
-	args->button = 5;
+	else
+	{
+		args->scale /= scale_factor;
+		args->button = 5;
+		args->start_x -= (vector.x - vector.x * scale_factor);
+		args->start_y -= (vector.y - vector.y * scale_factor);
+	}
+	printf("%d %d %f\n", args->start_x, args->start_y, scale_factor);
 }
 
 int	close_window(t_args *args)
@@ -85,7 +99,10 @@ int	mouse_movement(int x, int y, t_args *args)
 int	mouse_gestion(int button, int x, int y, t_args *args)
 {
 	if (button == 4 || button == 5)
+	{
+		mouse_reset(x, y, args);
 		zoom(args, button);
+	}
 	if (button == 3 || button == 1)
 		mouse_reset(x, y, args);
 	if (button == 2)
