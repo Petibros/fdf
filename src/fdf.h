@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 02:42:14 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/01/20 07:45:27 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/01/24 01:07:01 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ typedef struct s_args
 	int			**map;
 	int			highest;
 	int			lowest;
+	void		(*f)(struct s_args *, t_3_vectors, t_3_vectors);
 	t_vars		*vars;
 	t_img		*img;
 	float		height;
@@ -77,8 +78,12 @@ typedef struct s_args
 	int			size_x;
 	int			size_y;
 	int			button;
+	float		cos_val;
+	float		sin_val;
 }	t_args;
 
+void		draw_iso(t_args *args, t_3_vectors points, t_3_vectors next);
+void		draw_curv(t_args *args, t_3_vectors points, t_3_vectors next);
 void		center_map(t_args *args);
 int			mouse_movement(int x, int y, t_args *args);
 int			mouse_reset(int x, int y, t_args *args);

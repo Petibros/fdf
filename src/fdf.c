@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 20:07:08 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/01/20 08:09:29 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/01/24 01:06:51 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@ static void	init_args(t_args *args)
 	args->height = 1;
 	args->rotates.x = 0;
 	args->rotates.y = 0;
+	args->f = &draw_curv;
+	args->sin_val = sinf(30 * M_PI / 180);
+	args->cos_val = cosf(30 * M_PI / 180);
 	center_map(args);
 }
 
