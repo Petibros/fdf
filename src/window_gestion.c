@@ -134,6 +134,13 @@ int	key_switch(int keycode, t_args *args)
 	else if (keycode == 65432 || keycode == 65429 || keycode == 65430
 		|| keycode == 65431 || keycode == 65437 || keycode == 65434)
 		get_rotates(args, keycode);
+	else if (keycode == 32)
+	{
+		if (args->f == &draw_curv)
+			args->f = &draw_iso;
+		else
+			args->f = &draw_curv;
+	}
 	return (0);
 }
 

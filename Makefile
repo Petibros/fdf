@@ -1,6 +1,6 @@
 CC=cc
 NAME = fdf 
-SRCS = src/exit_n_free.c src/fdf.c src/parsing.c src/window_gestion.c src/draw.c src/map_alteration.c
+SRCS = src/exit_n_free.c src/fdf.c src/parsing.c src/window_gestion.c src/draw.c src/map_alteration.c src/colors.c
 HEADER = src/fdf.h
 OBJS = $(SRCS:.c=.o)
 CFLAGS = -Wall -Wextra -Werror -g -I libft -I minilibx-linux

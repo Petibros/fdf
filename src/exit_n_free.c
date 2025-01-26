@@ -28,8 +28,16 @@ static void	ft_free(t_args *args)
 		free(args->map[i]);
 		++i;
 	}
+	i = 0;
+	while (args && args->colors && i < args->size_y && args->colors[i])
+	{
+		free(args->colors[i]);
+		++i;
+	}
 	if (args && args->map)
 		free(args->map);
+	if (args && args->colors)
+		free(args->colors);
 	if (args && args->img)
 		free(args->img);
 	if (args && args->vars)

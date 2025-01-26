@@ -25,7 +25,7 @@ static void	init_args(t_args *args)
 	args->height = 1;
 	args->rotates.x = 0;
 	args->rotates.y = 0;
-	args->f = &draw_curv;
+	args->f = &draw_iso;
 	args->sin_val = sinf(30 * M_PI / 180);
 	args->cos_val = cosf(30 * M_PI / 180);
 	center_map(args);

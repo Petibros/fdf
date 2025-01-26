@@ -22,7 +22,7 @@ void	reset_image(t_img *image)
 		coords.x = 0;
 		while (coords.x < LENGTH)
 		{
-			my_mlx_pixel_put(image, coords.x, coords.y, 0x00000000);
+			my_mlx_pixel_put(image, coords.x, coords.y, 0x000000);
 			coords.x += 1;
 		}
 		coords.y += 1;
@@ -40,32 +40,37 @@ void	my_mlx_pixel_put(t_img *data, int x, int y, int color)
 	}
 }
 
-void	draw_line(t_args *args, t_2_vectors coords_1, t_2_vectors coords_2)
+void	draw_line(t_args *args, t_2_vectors coords_1, t_2_vectors coords_2, int color)
 {
 	int			n;
 	t_2_vectors	diff;
 	int			i;
+	t_2_vectors	step;
 
+	if (color == 0)
+		color = -1;
 	i = 0;
-	diff.x = coords_2.x - coords_1.x;
-	diff.y = coords_2.y - coords_1.y;
-	if (fabsf(diff.x) >= fabsf(diff.y))
-		n = fabsf(diff.x);
+	step.x = coords_2.x - coords_1.x;
+	step.y = coords_2.y - coords_1.y;
+	diff.x = fabsf(step.x);
+	diff.y = fabsf(step.y);
+	if (diff.x >= diff.y)
+		n = diff.x;
 	else
-		n = fabsf(diff.y);
-	diff.x = diff.x / n;
-	diff.y = diff.y / n;
+		n = diff.y;
+	step.x = step.x / n;
+	step.y = step.y / n;
 	while (i <= n)
 	{
 		my_mlx_pixel_put(args->img,
-			(int)coords_1.x, (int)coords_1.y, 0xFFFFFFFF);
-		coords_1.x += diff.x;
-		coords_1.y += diff.y;
+			(int)coords_1.x, (int)coords_1.y, color);
+		coords_1.x += step.x;
+		coords_1.y += step.y;
 		++i;
 	}
 }
 
-void	draw_curv(t_args *args, t_3_vectors points, t_3_vectors next)
+void	draw_curv(t_args *args, t_3_vectors points, t_3_vectors next, int color)
 {
 	t_2_vectors	coords_1;
 	t_2_vectors	coords_2;
@@ -73,20 +78,20 @@ void	draw_curv(t_args *args, t_3_vectors points, t_3_vectors next)
 	float		theta;
 	float		phi;
 
-	r = sqrt(pow(points.x, 2) + pow(points.y, 2) + pow(points.z, 2));
-	theta = atanf(points.y / points.x);
+	r = sqrtf(pow(points.x, 2) + pow(points.y, 2) + pow(points.z, 2));
+	theta = atan2f(points.y, points.x);
 	phi	= acosf(points.z / r);
 	coords_1.x = r * theta * args->scale + args->start_x;	
 	coords_1.y = r * phi * args->scale + args->start_y;
-	r = sqrt(pow(next.x, 2) + pow(next.y, 2) + pow(next.z, 2));
-	theta = atanf(next.y / next.x);
+	r = sqrtf(pow(next.x, 2) + pow(next.y, 2) + pow(next.z, 2));
+	theta = atan2f(next.y, next.x);
 	phi	= acosf(next.z / r);
 	coords_2.x = r * theta * args->scale + args->start_x;
 	coords_2.y = r * phi * args->scale + args->start_y;
-	draw_line(args, coords_1, coords_2);
+	draw_line(args, coords_1, coords_2, color);
 }
 
-void	draw_iso(t_args *args, t_3_vectors points, t_3_vectors next)
+void	draw_iso(t_args *args, t_3_vectors points, t_3_vectors next, int color)
 {
 	t_2_vectors	coords_1;
 	t_2_vectors	coords_2;
@@ -97,13 +102,14 @@ void	draw_iso(t_args *args, t_3_vectors points, t_3_vectors next)
 	coords_2.x = ((next.x - next.y) * args->cos_val * args->scale) + args->start_x;
 	coords_2.y = (next.x + next.y) * args->sin_val - next.z;
 	coords_2.y = coords_2.y * args->scale + args->start_y;
-	draw_line(args, coords_1, coords_2);
+	draw_line(args, coords_1, coords_2, color);
 }
 
 void	print_map(t_args *args)
 {
 	t_3_vectors	point;
 	t_3_vectors	next;
+	int			color;
 
 	point.y = 0;
 	while (point.y < args->size_y)
@@ -114,17 +120,35 @@ void	print_map(t_args *args)
 			point.z = args->map[(int)point.y][(int)point.x] * args->height;
 			if (point.x + 1 < args->size_x)
 			{
-				next.z = args->map[(int)point.y][(int)point.x + 1] * args->height;
 				next.y = point.y;
 				next.x = point.x + 1;
-				args->f(args, apply_rotate(args, point), apply_rotate(args, next));
+				next.z = args->map[(int)next.y][(int)next.x] * args->height;
+				if (!args->colors)
+				{
+					color = -51200 * (fmax(fabsf((float)args->map[(int)point.y][(int)point.x]),
+						fabsf((float)args->map[(int)next.y][(int)next.x])) / args->highest);
+				}
+				else if (fmax(fabsf(point.z / args->height), fabsf(next.z / args->height)) == next.z)
+					color = args->colors[(int)next.y][(int)next.x];
+				else
+					color = args->colors[(int)point.y][(int)point.x];
+				args->f(args, apply_rotate(args, point), apply_rotate(args, next), color);
 			}
 			if (point.y + 1 < args->size_y)
 			{
-				next.z = args->map[(int)point.y + 1][(int)point.x] * args->height;
 				next.y = point.y + 1;
 				next.x = point.x;
-				args->f(args, apply_rotate(args, point), apply_rotate(args, next));
+				next.z = args->map[(int)next.y][(int)next.x] * args->height;
+				if (!args->colors)
+				{
+					color = -51200 * (fmax(fabs((float)args->map[(int)point.y][(int)point.x]),
+						fabs((float)args->map[(int)next.y][(int)next.x])) / args->highest);
+				}
+				else if (fmax(fabs(point.z / args->height), fabs(next.z / args->height)) == next.z)
+					color = args->colors[(int)next.y][(int)next.x];
+				else
+					color = args->colors[(int)point.y][(int)point.x];
+				args->f(args, apply_rotate(args, point), apply_rotate(args, next), color);
 			}
 			point.x += 1;
 		}

@@ -64,9 +64,10 @@ typedef struct s_args
 {
 	int			fd;
 	int			**map;
-	int			highest;
-	int			lowest;
-	void		(*f)(struct s_args *, t_3_vectors, t_3_vectors);
+	int			**colors;
+	float		highest;
+	float		lowest;
+	void		(*f)(struct s_args *, t_3_vectors, t_3_vectors, int color);
 	t_vars		*vars;
 	t_img		*img;
 	float		height;
@@ -82,8 +83,11 @@ typedef struct s_args
 	float		sin_val;
 }	t_args;
 
-void		draw_iso(t_args *args, t_3_vectors points, t_3_vectors next);
-void		draw_curv(t_args *args, t_3_vectors points, t_3_vectors next);
+int			get_r(int color);
+int			get_g(int color);
+int			get_b(int color);
+void		draw_iso(t_args *args, t_3_vectors points, t_3_vectors next, int color);
+void		draw_curv(t_args *args, t_3_vectors points, t_3_vectors next, int color);
 void		center_map(t_args *args);
 int			mouse_movement(int x, int y, t_args *args);
 int			mouse_reset(int x, int y, t_args *args);
@@ -91,7 +95,7 @@ int			mouse_gestion(int button, int x, int y, t_args *args);
 void		get_rotates(t_args *args, int keycode);
 t_3_vectors	apply_rotate(t_args *args, t_3_vectors points);
 void		change_height(t_args *args, int keycode);
-void		draw_line(t_args *args, t_2_vectors coords_1, t_2_vectors coords_2);
+void		draw_line(t_args *args, t_2_vectors coords_1, t_2_vectors coords_2, int color);
 int			render_frame(t_args *args);
 void		my_mlx_pixel_put(t_img *data, int x, int y, int color);
 void		print_map(t_args *args);
