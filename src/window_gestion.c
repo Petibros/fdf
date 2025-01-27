@@ -50,7 +50,6 @@ static void	zoom(t_args *args, int keycode)
 		args->start_x -= (vector.x - vector.x * scale_factor);
 		args->start_y -= (vector.y - vector.y * scale_factor);
 	}
-	printf("%d %d %f\n", args->start_x, args->start_y, scale_factor);
 }
 
 int	close_window(t_args *args)
@@ -116,7 +115,6 @@ int	mouse_gestion(int button, int x, int y, t_args *args)
 		args->button = 1;
 	else if (button == 3)
 		args->button = 3;
-	printf("%d;%d   %d\n", x, y, button);
 	return (0);
 }
 
@@ -140,6 +138,12 @@ int	key_switch(int keycode, t_args *args)
 			args->f = &draw_iso;
 		else
 			args->f = &draw_curv;
+	}
+	else if (keycode == 99)
+	{
+		++args->colors->i;
+		if (args->colors->i >= args->colors->tab_size)
+			args->colors->i = 0;
 	}
 	return (0);
 }

@@ -13,8 +13,8 @@
 #ifndef FDF_H
 # define FDF_H
 
-# define HEIGHT 720
-# define LENGTH 1320
+# define HEIGHT 960
+# define LENGTH 1780
 
 # include "mlx.h"
 # include "libft.h"
@@ -60,13 +60,21 @@ typedef struct s_vars
 	void	*window;
 }	t_vars;
 
+typedef struct s_colors
+{
+	int	***tab;
+	int	tab_size;
+	int	i;
+}	t_colors;
+
 typedef struct s_args
 {
 	int			fd;
 	int			**map;
-	int			**colors;
+	t_colors	*colors;
 	float		highest;
 	float		lowest;
+	float		diff;
 	void		(*f)(struct s_args *, t_3_vectors, t_3_vectors, int color);
 	t_vars		*vars;
 	t_img		*img;
@@ -83,6 +91,8 @@ typedef struct s_args
 	float		sin_val;
 }	t_args;
 
+void		get_colors(t_args *args);
+int			***alloc_tab(t_args *args);
 int			get_r(int color);
 int			get_g(int color);
 int			get_b(int color);
@@ -104,6 +114,6 @@ int			key_switch(int keycode, t_args *args);
 int			close_window(t_args *args);
 void		exit_miss_args(void);
 void		exit_msg(t_args *args, char *msg, int close_fd, int status);
-t_args		*parsing(char **argv);
+void		parsing(char **argv, t_args *args);
 
 #endif

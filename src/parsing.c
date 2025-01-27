@@ -86,9 +86,7 @@ static void	put_in_tab(char *line, t_args *args, int *tab, int y)
 			while (line[i] && line[i] != '\n' && line[i] != ' ')
 			{
 				if (line[i] == '0' && line[i + 1] == 'x')
-					args->colors[y][n - 1] = ft_atoi_base(&line[i + 2], "0123456789abcdef");
-				if (line[i] == '0' && line[i + 1] == 'X')
-					args->colors[y][n - 1] = ft_atoi_base(&line[i + 2], "0123456789ABCDEF");
+					args->colors->tab[3][y][n - 1] = ft_atoi_base(&line[i + 2], "0123456789abcdef");
 				++i;
 			}
 		}
@@ -105,13 +103,7 @@ static void	fill_tab(t_args *args, char *file)
 	n = 0;
 	i = 0;
 	args->size_x = get_longest(file);
-	while (args->colors && i < args->size_y)
-	{
-		args->colors[i] = ft_calloc(args->size_x, sizeof(int));
-		if (!args->colors[i])
-			exit_msg(args, "Malloc error when trying to alloc colors", 1, 1);
-		++i;
-	}
+	args->colors->tab = alloc_tab(args);
 	i = 0;
 	while (file[i])
 	{
@@ -161,22 +153,14 @@ static char	*read_map(t_args *args)
 	if (i >= 1 && file[i - 1] != '\n')
 		++args->size_y;
 	if (n_read)
-	{
-		args->colors = malloc(args->size_y * sizeof(int *));
-		if (!args->colors)
-			exit_msg(args, "Malloc error when trying to alloc colors", 1, 1);
-	}
+		args->colors->tab_size = 4;
 	return (file);
 }
 
-t_args	*parsing(char **argv)
+void	parsing(char **argv, t_args *args)
 {
-	t_args	*args;
 	char	*file;
 
-	args = malloc(sizeof(t_args));
-	if (!args)
-		exit_msg(args, "Failed to alloc args", 0, 1);
 	args->fd = open(argv[1], O_RDONLY);
 	if (args->fd == -1)
 		exit_msg(args, "Invalid file", 0, 1);
@@ -188,5 +172,4 @@ t_args	*parsing(char **argv)
 	if (!args->map)
 		exit_msg(args, "Failed to alloc map", 1, 1);
 	fill_tab(args, file);
-	return (args);
 }

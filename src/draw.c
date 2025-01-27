@@ -123,31 +123,21 @@ void	print_map(t_args *args)
 				next.y = point.y;
 				next.x = point.x + 1;
 				next.z = args->map[(int)next.y][(int)next.x] * args->height;
-				if (!args->colors)
-				{
-					color = -51200 * (fmax(fabsf((float)args->map[(int)point.y][(int)point.x]),
-						fabsf((float)args->map[(int)next.y][(int)next.x])) / args->highest);
-				}
-				else if (fmax(fabsf(point.z / args->height), fabsf(next.z / args->height)) == next.z)
-					color = args->colors[(int)next.y][(int)next.x];
+				if (fmax(fabs(point.z / args->height), fabs(next.z / args->height)) == fabs(next.z / args->height))
+					color = args->colors->tab[args->colors->i][(int)next.y][(int)next.x];
 				else
-					color = args->colors[(int)point.y][(int)point.x];
+					color = args->colors->tab[args->colors->i][(int)point.y][(int)point.x];
 				args->f(args, apply_rotate(args, point), apply_rotate(args, next), color);
 			}
 			if (point.y + 1 < args->size_y)
 			{
 				next.y = point.y + 1;
 				next.x = point.x;
-				next.z = args->map[(int)next.y][(int)next.x] * args->height;
-				if (!args->colors)
-				{
-					color = -51200 * (fmax(fabs((float)args->map[(int)point.y][(int)point.x]),
-						fabs((float)args->map[(int)next.y][(int)next.x])) / args->highest);
-				}
-				else if (fmax(fabs(point.z / args->height), fabs(next.z / args->height)) == next.z)
-					color = args->colors[(int)next.y][(int)next.x];
+				next.z = args->map[(int)next.y][(int)next.x] * args->height;	
+				if (fmax(fabs(point.z / args->height), fabs(next.z / args->height)) == fabs(next.z / args->height))
+					color = args->colors->tab[args->colors->i][(int)next.y][(int)next.x];
 				else
-					color = args->colors[(int)point.y][(int)point.x];
+					color = args->colors->tab[args->colors->i][(int)point.y][(int)point.x];
 				args->f(args, apply_rotate(args, point), apply_rotate(args, next), color);
 			}
 			point.x += 1;

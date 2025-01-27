@@ -23,11 +23,13 @@ static void	init_args(t_args *args)
 	args->vars->mlx = mlx_init();
 	args->scale = (LENGTH / 5 * 3) / fabs((sqrt((pow(args->size_x, 2) + pow(args->size_y, 2))) - (args->lowest - args->highest)));
 	args->height = 1;
+	args->diff = fmaxf(fabs(args->highest), fabs(args->lowest));
 	args->rotates.x = 0;
 	args->rotates.y = 0;
 	args->f = &draw_iso;
 	args->sin_val = sinf(30 * M_PI / 180);
 	args->cos_val = cosf(30 * M_PI / 180);
+	get_colors(args);
 	center_map(args);
 }
 
@@ -37,7 +39,15 @@ int	main(int argc, char **argv)
 
 	if (argc != 2)
 		exit_miss_args();
-	args = parsing(argv);
+	args = malloc(sizeof(t_args));
+	if (!args)
+		exit_msg(args, "Failed to alloc args", 0, 1);
+	args->colors = malloc(sizeof(t_colors));
+	if (!args->colors)	
+		exit_msg(args, "Failed to alloc colors", 0, 1);
+	args->colors->i = 0;
+	args->colors->tab_size = 3;
+	parsing(argv, args);
 	init_args(args);
 	args->vars->window = mlx_new_window(args->vars->mlx, LENGTH, HEIGHT,
 			argv[1]);

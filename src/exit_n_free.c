@@ -21,6 +21,7 @@ void	exit_miss_args(void)
 static void	ft_free(t_args *args)
 {
 	int	i;
+	int	j;
 
 	i = 0;
 	while (args && args->map && i < args->size_y && args->map[i])
@@ -29,13 +30,21 @@ static void	ft_free(t_args *args)
 		++i;
 	}
 	i = 0;
-	while (args && args->colors && i < args->size_y && args->colors[i])
+	while (args && args->colors && args->colors->tab && i < args->colors->tab_size && args->colors->tab[i])
 	{
-		free(args->colors[i]);
+		j = 0;
+		while (j < args->size_y && args->colors->tab[i][j])
+		{
+			free(args->colors->tab[i][j]);
+			++j;
+		}
+		free(args->colors->tab[i]);
 		++i;
 	}
 	if (args && args->map)
 		free(args->map);
+	if (args && args->colors && args->colors->tab)
+		free(args->colors->tab);
 	if (args && args->colors)
 		free(args->colors);
 	if (args && args->img)

@@ -27,6 +27,7 @@ typedef struct s_list
 	struct s_list	*next;
 }					t_list;
 
+int		ft_atoi_base(const char *nptr, char *base);
 char	*get_next_line(int fd);
 int		ft_strnlen(char *str, char c);
 char	*ft_strjoin_gnl(char *s1, char *s2);
