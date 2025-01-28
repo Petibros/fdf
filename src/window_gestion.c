@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 00:01:36 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/01/23 22:07:23 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/01/28 04:47:03 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@ static void	translation(t_args *args, int keycode)
 	int	to_add;
 
 	to_add = args->scale / (args->scale / 10);
-	if (keycode == 119)
+	if (keycode == W)
 		args->start_y -= to_add;
-	else if (keycode == 97)
+	else if (keycode == A)
 		args->start_x -= to_add;
-	else if (keycode == 115)
+	else if (keycode == S)
 		args->start_y += to_add;
 	else
 		args->start_x += to_add;
@@ -36,17 +36,17 @@ static void	zoom(t_args *args, int keycode)
 	vector.y = args->last_pos.y - args->start_y; 
 	scale_factor = 1.1;
 
-	if (keycode == 65362 || keycode == 4)
+	if (keycode == ARROW_U || keycode == SCROLL_U)
 	{
 		args->scale *= scale_factor;
-		args->button = 4;
+		args->button = SCROLL_U;
 		args->start_x += (vector.x - vector.x * scale_factor);
 		args->start_y += (vector.y - vector.y * scale_factor);
 	}
 	else
 	{
 		args->scale /= scale_factor;
-		args->button = 5;
+		args->button = SCROLL_D;
 		args->start_x -= (vector.x - vector.x * scale_factor);
 		args->start_y -= (vector.y - vector.y * scale_factor);
 	}
@@ -83,12 +83,12 @@ void	center_map(t_args *args)
 
 int	mouse_movement(int x, int y, t_args *args)
 {
-	if (args->button == 3)
+	if (args->button == MOUSE_R)
 	{
 		args->start_x += (x - args->last_pos.x) / (args->size_x / args->size_y);
 		args->start_y += y - args->last_pos.y;
 	}
-	else if (args->button == 1)
+	else if (args->button == MOUSE_L)
 	{
 		args->rotates.x -= y - args->last_pos.y;
 		args->rotates.y -= x - args->last_pos.x;
@@ -99,47 +99,47 @@ int	mouse_movement(int x, int y, t_args *args)
 
 int	mouse_gestion(int button, int x, int y, t_args *args)
 {
-	if (button == 4 || button == 5)
+	if (button == SCROLL_U || button == SCROLL_D)
 	{
 		mouse_reset(x, y, args);
 		zoom(args, button);
 	}
-	if (button == 3 || button == 1)
+	if (button == MOUSE_R || button == MOUSE_L)
 		mouse_reset(x, y, args);
-	if (button == 2)
+	if (button == MOUSE_M)
 	{
 		center_map(args);
-		args->button = 2;
+		args->button = MOUSE_M;
 	}
-	else if (button == 1)
-		args->button = 1;
-	else if (button == 3)
-		args->button = 3;
+	else if (button == MOUSE_L)
+		args->button = MOUSE_L;
+	else if (button == MOUSE_R)
+		args->button = MOUSE_R;
 	return (0);
 }
 
 int	key_switch(int keycode, t_args *args)
 {
-	if (keycode == 65307)
+	if (keycode == ESC)
 		close_window(args);
-	else if (keycode == 65362 || keycode == 65364)
+	else if (keycode == ARROW_U || keycode == ARROW_D)
 		zoom(args, keycode);
-	else if (keycode == 65361 || keycode == 65363)
+	else if (keycode == ARROW_R || keycode == ARROW_L)
 		change_height(args, keycode);
-	else if (keycode == 119 || keycode == 100 || keycode == 115
-		|| keycode == 97)
+	else if (keycode == W || keycode == A || keycode == S
+		|| keycode == D)
 		translation(args, keycode);
-	else if (keycode == 65432 || keycode == 65429 || keycode == 65430
-		|| keycode == 65431 || keycode == 65437 || keycode == 65434)
+	else if (keycode == NUM_7 || keycode == NUM_4
+		|| keycode == NUM_9 || keycode == NUM_6)
 		get_rotates(args, keycode);
-	else if (keycode == 32)
+	else if (keycode == SPACE)
 	{
 		if (args->f == &draw_curv)
 			args->f = &draw_iso;
 		else
 			args->f = &draw_curv;
 	}
-	else if (keycode == 99)
+	else if (keycode == C)
 	{
 		++args->colors->i;
 		if (args->colors->i >= args->colors->tab_size)

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   ft_atoi_base.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 04:46:00 by sacgarci          #+#    #+#             */
-/*   Updated: 2024/10/09 06:37:36 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/01/27 18:46:00 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,10 @@ int	ft_atoi_base(const char *nptr, char *base)
 	int	i;
 	int	total;
 	int	minus;
+	int	base_len;
 
-	minus = 0;
+	base_len = ft_strlen(base);
+	minus = 1;
 	total = 0;
 	i = 0;
 	while (nptr[i] == ' ' || (nptr[i] >= 9 && nptr[i] <= 13))
@@ -42,15 +44,13 @@ int	ft_atoi_base(const char *nptr, char *base)
 	if (nptr[i] == '-' || nptr[i] == '+')
 	{
 		if (nptr[i] == '-')
-			minus = 1;
+			minus = -1;
 		i++;
 	}
 	while (is_in_base(base, nptr[i]) != -1)
 	{
-		total = (total * ft_strlen(base)) + (is_in_base(base, nptr[i]));
+		total = (total * base_len) + (is_in_base(base, nptr[i]));
 		i++;
 	}
-	if (minus == 1)
-		return (-total);
-	return (total);
+	return (total * minus);
 }

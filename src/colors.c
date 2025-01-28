@@ -1,21 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   colors.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/28 00:07:29 by sacgarci          #+#    #+#             */
+/*   Updated: 2025/01/28 02:24:19 by sacgarci         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fdf.h"
 
-int	get_r(int color)
-{
-	return ((color >> 16) & 0xFF);
-}
-
-int	get_g(int color)
-{
-	return ((color >> 8) & 0xFF);
-}
-
-int	get_b(int color)
-{
-	return (color & 0xFF);
-}
-
-int ***alloc_tab(t_args *args)
+int	***alloc_tab(t_args *args)
 {
 	int	***tab;
 	int	i;
@@ -43,16 +40,39 @@ int ***alloc_tab(t_args *args)
 	return (tab);
 }
 
+static void	set_gradiant_ends(t_args *args, int *factor, int *end)
+{
+	*factor = -255;
+	if (args->colors->i == 1)
+		*end = 65536;
+	if (args->colors->i == 2)
+	{
+		*end = 16711730;
+		*factor = -65280;
+	}
+	if (args->colors->i == 3)
+		*end = 65280;
+	if (args->colors->i == 4)
+	{
+		*end = 65330;
+		*factor = -65280;
+	}
+	if (args->colors->i == 5)
+		*end = 8552445;
+	if (args->colors->i == 6)
+		*end = 16776960;
+}
+
 void	get_colors(t_args *args)
 {
 	int	y;
 	int	x;
 	int	factor;
-	int	base;
+	int	end;
 
 	factor = 0;
-	base = -1;
-	while (args->colors->i < 3)
+	end = -1;
+	while (args->colors->i < 7)
 	{
 		y = 0;
 		while (y < args->size_y)
@@ -60,16 +80,14 @@ void	get_colors(t_args *args)
 			x = 0;
 			while (x < args->size_x)
 			{
-				args->colors->tab[args->colors->i][y][x] = base - (factor * fabsf((args->map[y][x] / args->diff)));
+				args->colors->tab[args->colors->i][y][x]
+					= end - (factor * fabsf((args->map[y][x] / args->diff)));
 				++x;
 			}
 			++y;
 		}
 		++args->colors->i;
-		factor = -255;
-		base = 1;
-		if (args->colors->i == 2)
-			base = 16711680;
+		set_gradiant_ends(args, &factor, &end);
 	}
 	args->colors->i = 0;
 }

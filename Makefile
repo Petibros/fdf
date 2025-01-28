@@ -1,6 +1,18 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2025/01/28 02:15:19 by sacgarci          #+#    #+#              #
+#    Updated: 2025/01/28 02:31:25 by sacgarci         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 CC=cc
 NAME = fdf 
-SRCS = src/exit_n_free.c src/fdf.c src/parsing.c src/window_gestion.c src/draw.c src/map_alteration.c src/colors.c
+SRCS = src/parsing_utils.c src/exit_n_free.c src/fdf.c src/parsing.c src/window_gestion.c src/draw.c src/map_alteration.c src/colors.c
 HEADER = src/fdf.h
 OBJS = $(SRCS:.c=.o)
 CFLAGS = -Wall -Wextra -Werror -g -I libft -I minilibx-linux
@@ -25,17 +37,6 @@ $(MLX):
 
 run: all
 	./$(NAME) test_maps/42.fdf
-
-sacha: all
-	./$(NAME) $(ARGS) 
-
-
-run2: all
-	echo "do1"
-	gnome-terminal
-
-run3: all
-	echo "156f15"
 
 fclean: clean
 	rm -f $(NAME) $(LIBFT) $(MLX)
