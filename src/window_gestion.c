@@ -6,11 +6,31 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 00:01:36 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/01/28 04:47:03 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/01/28 18:10:50 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
+
+static void	change_height(t_args *args, int keycode)
+{
+	if (keycode == 65361)
+		args->height += fabsf((args->height / 50)) + 0.002;
+	else
+		args->height -= fabsf((args->height / 50)) + 0.002;
+}
+
+static void	get_rotates(t_args *args, int keycode)
+{
+	if (keycode == 65432)
+		args->rotates.y -= 1;
+	else if (keycode == 65434)
+		args->rotates.y += 1;
+	else if (keycode == 65430)
+		args->rotates.x -= 1;
+	else if (keycode == 65429)
+		args->rotates.x += 1;
+}
 
 static void	translation(t_args *args, int keycode)
 {

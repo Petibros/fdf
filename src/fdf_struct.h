@@ -6,15 +6,15 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 02:42:14 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/01/28 02:45:39 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/01/28 16:24:45 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FDF_STRUCT_H
 # define FDF_STRUCT_H
 
-# define HEIGHT 560
-# define LENGTH 960
+# define HEIGHT 1080
+# define LENGTH 1920
 
 # include "mlx.h"
 # include "libft.h"
