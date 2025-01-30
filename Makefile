@@ -32,10 +32,10 @@ LIBFT = libft/libft.a
 
 all:$(NAME)
 
-$(NAME): $(OBJS) $(LIBFT) $(MLX)
+$(NAME): $(MLX) $(OBJS) $(LIBFT)
 	$(CC) $(OBJS) $(LDFLAGS) -o $(NAME) -lm
 
-bonus: $(OBJS_BONUS) $(LIBFT) $(MLX)
+bonus: $(MLX) $(OBJS_BONUS) $(LIBFT)
 	$(CC) $(OBJS_BONUS) $(LDFLAGS) -o $(NAME_BONUS) -lm
 
 %.o : %.c $(HEADER_BONUS) $(HEADER)
@@ -45,6 +45,7 @@ $(LIBFT):
 	make -C libft
 
 $(MLX):
+	git clone https://github.com/42Paris/minilibx-linux.git
 	make -C minilibx-linux
 
 run: all
