@@ -10,11 +10,20 @@
 #                                                                              #
 # **************************************************************************** #
 
-CC=cc
-NAME = fdf 
-SRCS = src/parsing_utils.c src/exit_n_free.c src/fdf.c src/parsing.c src/window_gestion.c src/draw.c src/map_alteration.c src/colors.c
+CC = cc
+NAME = fdf
+NAME_BONUS = fdf_bonus
+SRCS = src/draw.c src/fdf.c src/parsing_utils.c src/exit_n_free.c src/parsing.c \
+		src/window_gestion.c
+SRCS_BONUS = src_bonus/calc_points_bonus.c src_bonus/rotates_bonus.c 			\
+			src_bonus/parsing_utils_bonus.c src_bonus/exit_n_free_bonus.c		\
+			src_bonus/fdf_bonus.c src_bonus/parsing_bonus.c 					\
+			src_bonus/keyboard_gestion_bonus.c src_bonus/mouse_gestion_bonus.c	\
+			src_bonus/draw_bonus.c src_bonus/colors_bonus.c
 HEADER = src/fdf.h
+HEADER_BONUS = src_bonus/fdf_bonus.h
 OBJS = $(SRCS:.c=.o)
+OBJS_BONUS = $(SRCS_BONUS:.c=.o)
 CFLAGS = -Wall -Wextra -Werror -g -I libft -I minilibx-linux
 MLX = minilibx-linux/libmlx.a
 LDFLAGS =  $(LIBFT) $(MLX) $(shell pkg-config --libs x11 xext)
@@ -26,7 +35,10 @@ all:$(NAME)
 $(NAME): $(OBJS) $(LIBFT) $(MLX)
 	$(CC) $(OBJS) $(LDFLAGS) -o $(NAME) -lm
 
-%.o : %.c $(HEADER)
+bonus: $(OBJS_BONUS) $(LIBFT) $(MLX)
+	$(CC) $(OBJS_BONUS) $(LDFLAGS) -o $(NAME_BONUS) -lm
+
+%.o : %.c $(HEADER_BONUS) $(HEADER)
 	$(CC) $(CFLAGS) $< -c -o $@
 
 $(LIBFT):
@@ -39,12 +51,12 @@ run: all
 	./$(NAME) test_maps/42.fdf
 
 fclean: clean
-	rm -f $(NAME) $(LIBFT) $(MLX)
+	rm -f $(NAME) $(NAME_BONUS) $(LIBFT) $(MLX)
 
 clean:
 	make clean -C libft
 	make clean -C minilibx-linux
-	rm -f $(OBJS)
+	rm -f $(OBJS_BONUS) $(OBJS)
 
 re: fclean all
 

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "fdf_bonus.h"
 
 void	exit_miss_args(void)
 {
@@ -18,18 +18,14 @@ void	exit_miss_args(void)
 	exit (1);
 }
 
-static void	ft_free(t_args *args)
+static void	free_args(t_args *args)
 {
-	int	i;
-
-	i = 0;
-	while (args && args->map && i < args->size_y && args->map[i])
-	{
-		free(args->map[i]);
-		++i;
-	}
 	if (args && args->map)
 		free(args->map);
+	if (args && args->colors && args->colors->tab)
+		free(args->colors->tab);
+	if (args && args->colors)
+		free(args->colors);
 	if (args && args->img)
 		free(args->img);
 	if (args && args->vars)
@@ -38,6 +34,33 @@ static void	ft_free(t_args *args)
 		free(args->file);
 	if (args)
 		free(args);
+}
+
+static void	ft_free(t_args *args)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (args && args->map && i < args->size_y && args->map[i])
+	{
+		free(args->map[i]);
+		++i;
+	}
+	i = 0;
+	while (args && args->colors && args->colors->tab
+		&& i < args->colors->tab_size && args->colors->tab[i])
+	{
+		j = 0;
+		while (j < args->size_y && args->colors->tab[i][j])
+		{
+			free(args->colors->tab[i][j]);
+			++j;
+		}
+		free(args->colors->tab[i]);
+		++i;
+	}
+	free_args(args);
 }
 
 static void	display_format(void)

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "fdf_bonus.h"
 
 static void	get_z_ends(t_args *args, int n)
 {
@@ -20,7 +20,7 @@ static void	get_z_ends(t_args *args, int n)
 		args->lowest = n;
 }
 
-static int	skip_map_colors(char *line)
+static int	get_map_colors(char *line, t_args *args, int y, int x)
 {
 	int	i;
 
@@ -28,12 +28,17 @@ static int	skip_map_colors(char *line)
 	if (line[i] == ',')
 	{
 		while (line[i] && line[i] != '\n' && line[i] != ' ')
+		{
+			if (line[i] == '0' && line[i + 1] == 'x')
+				args->colors->tab[args->colors->tab_size - 1][y][x - 1]
+					= ft_atoi_base(&line[i + 2], "0123456789abcdef");
 			++i;
+		}
 	}
 	return (i);
 }
 
-void	put_in_tab(char *line, t_args *args, int *tab)
+void	put_in_tab(char *line, t_args *args, int *tab, int y)
 {
 	int	n;
 	int	i;
@@ -53,7 +58,7 @@ void	put_in_tab(char *line, t_args *args, int *tab)
 			++i;
 		while (ft_isdigit(line[i]))
 			++i;
-		i += skip_map_colors(&line[i]);
+		i += get_map_colors(&line[i], args, y, n);
 	}
 	while (n < args->size_x)
 	{

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "fdf_bonus.h"
 
 static t_3_vectors	rotate(t_args *args, t_3_vectors points,
 		t_3_vectors axis, float theta)

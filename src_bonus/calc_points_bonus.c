@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "fdf_bonus.h"
 
 void	draw_curv(t_args *args, t_3_vectors points, t_3_vectors next, int color)
 {

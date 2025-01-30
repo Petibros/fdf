@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "fdf_bonus.h"
 
 static void	fill_tab(t_args *args)
 {
@@ -20,13 +20,14 @@ static void	fill_tab(t_args *args)
 	n = 0;
 	i = 0;
 	args->size_x = get_longest(args);
+	args->colors->tab = alloc_tab(args);
 	i = 0;
 	while (args->file[i])
 	{
 		args->map[n] = malloc(args->size_x * sizeof(int));
 		if (!args->map[n])
 			exit_msg(args, "Failed to alloc tab", 1, 1);
-		put_in_tab(&args->file[i], args, args->map[n]);
+		put_in_tab(&args->file[i], args, args->map[n], n);
 		while (args->file[i] && args->file[i] != '\n')
 			++i;
 		if (args->file[i] == '\n')
@@ -61,16 +62,23 @@ static char	*read_map(t_args *args)
 static void	count_lines(t_args *args)
 {
 	int	i;
+	int	set_colors;
 
 	i = 0;
+	set_colors = 0;
 	while (args->file[i])
 	{
 		if (args->file[i] == '\n')
 			++args->size_y;
+		if (args->file[i] == '0'
+			&& (args->file[i + 1] == 'x' || args->file[i + 1] == 'X'))
+			set_colors = 1;
 		++i;
 	}
 	if (i >= 1 && args->file[i - 1] != '\n')
 		++args->size_y;
+	if (set_colors)
+		args->colors->tab_size++;
 }
 
 void	parsing(char **argv, t_args *args)
