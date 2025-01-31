@@ -22,8 +22,8 @@ static t_3_vectors	rotate(t_args *args, t_3_vectors points,
 
 	center.x = args->size_x / 2;
 	center.y = args->size_y / 2;
-	sinus = sin(theta);
-	cosinus = cos(theta);
+	sinus = sinf(theta);
+	cosinus = cosf(theta);
 	points.x -= center.x;
 	points.y -= center.y;
 	final_points.x = points.x * (cosinus + pow(axis.x, 2) * (1 - cosinus))

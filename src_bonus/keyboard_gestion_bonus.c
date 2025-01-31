@@ -47,14 +47,14 @@ static void	translation(t_args *args, int keycode)
 		args->start_x += to_add;
 }
 
-int	close_window(t_args *args)
+static void	change_perspective(t_args *args)
 {
-	mlx_destroy_window(args->vars->mlx, args->vars->window);
-	mlx_destroy_image(args->vars->mlx, args->img->image);
-	mlx_destroy_display(args->vars->mlx);
-	free(args->vars->mlx);
-	exit_msg(args, NULL, 1, 0);
-	return (0);
+	if (args->f == &draw_iso)
+		args->f = &draw_curv;
+	else if (args->f == &draw_curv)
+		args->f = &draw_cava;
+	else
+		args->f = &draw_iso;
 }
 
 int	key_switch(int keycode, t_args *args)
@@ -71,12 +71,7 @@ int	key_switch(int keycode, t_args *args)
 		|| keycode == NUM_9 || keycode == NUM_6)
 		get_rotates(args, keycode);
 	else if (keycode == SPACE)
-	{
-		if (args->f == &draw_curv)
-			args->f = &draw_iso;
-		else
-			args->f = &draw_curv;
-	}
+		change_perspective(args);
 	else if (keycode == C)
 	{
 		++args->colors->i;

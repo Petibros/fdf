@@ -102,8 +102,6 @@ typedef struct s_args
 	float		diff;
 	float		height;
 	float		scale;
-	float		cos_val;
-	float		sin_val;
 	int			fd;
 	int			start_x;
 	int			start_y;

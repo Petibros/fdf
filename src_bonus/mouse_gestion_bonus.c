@@ -47,9 +47,13 @@ void	center_map(t_args *args)
 {
 	float	dx;
 	float	dy;
+	float	cos_val;
+	float	sin_val;
 
-	dx = ((args->size_x / 2) - (args->size_y / 2)) * args->cos_val;
-	dy = ((args->size_x / 2) + (args->size_y / 2)) * args->sin_val;
+	sin_val = sinf(30 * M_PI / 180);
+	cos_val = cosf(30 * M_PI / 180);
+	dx = ((args->size_x / 2) - (args->size_y / 2)) * cos_val;
+	dy = ((args->size_x / 2) + (args->size_y / 2)) * sin_val;
 	args->start_x = (LENGTH / 2) - dx * args->scale;
 	args->start_y = (HEIGHT / 2) - dy * args->scale;
 }
@@ -58,7 +62,7 @@ int	mouse_movement(int x, int y, t_args *args)
 {
 	if (args->button == MOUSE_R)
 	{
-		args->start_x += (x - args->last_pos.x) / (args->size_x / args->size_y);
+		args->start_x += x - args->last_pos.x;
 		args->start_y += y - args->last_pos.y;
 	}
 	else if (args->button == MOUSE_L)

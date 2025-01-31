@@ -12,6 +12,16 @@
 
 #include "fdf_bonus.h"
 
+int	close_window(t_args *args)
+{
+	mlx_destroy_window(args->vars->mlx, args->vars->window);
+	mlx_destroy_image(args->vars->mlx, args->img->image);
+	mlx_destroy_display(args->vars->mlx);
+	free(args->vars->mlx);
+	exit_msg(args, NULL, 1, 0);
+	return (0);
+}
+
 int	render_frame(t_args *args)
 {
 	reset_image(args->img);
@@ -35,11 +45,11 @@ static void	init_args(t_args *args)
 				- (args->lowest - args->highest)));
 	args->height = 1;
 	args->diff = fmaxf(fabs(args->highest), fabs(args->lowest));
+	if (!args->diff)
+		args->diff = 1;
 	args->rotates.x = 0;
 	args->rotates.y = 0;
 	args->f = &draw_iso;
-	args->sin_val = sinf(30 * M_PI / 180);
-	args->cos_val = cosf(30 * M_PI / 180);
 	args->button = 0;
 	get_colors(args);
 	center_map(args);

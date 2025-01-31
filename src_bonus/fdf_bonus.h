@@ -25,6 +25,8 @@ int			close_window(t_args *args);
 int			get_longest(t_args *args);
 void		draw_line(t_args *args, t_2_vectors coords_1,
 				t_2_vectors coords_2, int color);
+void		draw_cava(t_args *args, t_3_vectors points,
+				t_3_vectors next, int color);
 void		draw_iso(t_args *args, t_3_vectors points,
 				t_3_vectors next, int color);
 void		draw_curv(t_args *args, t_3_vectors points,

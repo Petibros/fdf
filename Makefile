@@ -45,8 +45,16 @@ $(LIBFT):
 	make -C libft
 
 $(MLX):
-	git clone https://github.com/42Paris/minilibx-linux.git
 	make -C minilibx-linux
+
+mlx:
+	git clone https://github.com/42Paris/minilibx-linux.git
+
+maps:
+	wget https://cdn.intra.42.fr/document/document/26195/maps.zip
+	unzip maps.zip
+	rm maps.zip
+	rm -r __MACOSX
 
 run: all
 	./$(NAME) test_maps/42.fdf
