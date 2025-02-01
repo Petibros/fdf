@@ -14,7 +14,7 @@
 
 static void	change_height(t_args *args, int keycode)
 {
-	if (keycode == 65361)
+	if (keycode == ARROW_R)
 		args->height += fabsf((args->height / 50)) + 0.002;
 	else
 		args->height -= fabsf((args->height / 50)) + 0.002;
