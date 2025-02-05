@@ -22,13 +22,13 @@ static void	change_height(t_args *args, int keycode)
 
 static void	get_rotates(t_args *args, int keycode)
 {
-	if (keycode == 65432)
+	if (keycode == NUM_4)
 		args->rotates.y -= 1;
-	else if (keycode == 65434)
+	else if (keycode == NUM_7)
 		args->rotates.y += 1;
-	else if (keycode == 65430)
+	else if (keycode == NUM_6)
 		args->rotates.x -= 1;
-	else if (keycode == 65429)
+	else if (keycode == NUM_9)
 		args->rotates.x += 1;
 }
 
