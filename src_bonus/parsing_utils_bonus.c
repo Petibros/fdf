@@ -81,7 +81,7 @@ static int	count_numbers(char *line, t_args *args)
 		if (!line[i] || line[i] == '\n')
 			break ;
 		if (!ft_isdigit(line[i]) && line[i] != '-' && line[i] != '+')
-			exit_msg(args, "Invalid Map", 1, 1);
+			exit_msg(args, "Invalid Map", 5, 1);
 		++n;
 		if (line[i] == '-' || line[i] == '+')
 			++i;

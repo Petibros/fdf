@@ -21,18 +21,18 @@ int	***alloc_tab(t_args *args)
 	i = 0;
 	tab = malloc(args->colors->tab_size * sizeof(int **));
 	if (!tab)
-		exit_msg(args, "Failed to alloc colors", 1, 1);
+		exit_msg(args, "Failed to alloc colors", 6, 1);
 	while (i < args->colors->tab_size)
 	{
 		j = 0;
 		tab[i] = malloc(args->size_y * sizeof(int *));
 		if (!tab[i])
-			exit_msg(args, "Failed to alloc colors", 1, 1);
+			exit_msg(args, "Failed to alloc colors", 6, 1);
 		while (j < args->size_y)
 		{
 			tab[i][j] = ft_calloc(args->size_x, sizeof(int));
 			if (!tab[i][j])
-				exit_msg(args, "Failed to alloc colors", 1, 1);
+				exit_msg(args, "Failed to alloc colors", 6, 1);
 			++j;
 		}
 		++i;

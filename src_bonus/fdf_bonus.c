@@ -14,11 +14,8 @@
 
 int	close_window(t_args *args)
 {
-	mlx_destroy_window(args->vars->mlx, args->vars->window);
 	mlx_destroy_image(args->vars->mlx, args->img->image);
-	mlx_destroy_display(args->vars->mlx);
-	free(args->vars->mlx);
-	exit_msg(args, NULL, 1, 0);
+	exit_msg(args, NULL, 11, 0);
 	return (0);
 }
 
@@ -35,11 +32,13 @@ static void	init_args(t_args *args)
 {
 	args->vars = malloc(sizeof(t_vars));
 	if (!args->vars)
-		exit_msg(args, "Failed to alloc vars", 1, 1);
+		exit_msg(args, "Failed to alloc vars", 7, 1);
 	args->img = malloc(sizeof(t_img));
 	if (!args->img)
-		exit_msg(args, "Failed to alloc img", 1, 1);
+		exit_msg(args, "Failed to alloc img", 8, 1);
 	args->vars->mlx = mlx_init();
+	if (!args->vars->mlx)
+		exit_msg(args, "Problem with the display", 9, 1);
 	args->scale = (LENGTH / 5 * 3) / fabs((sqrt((pow(args->size_x, 2)
 						+ pow(args->size_y, 2)))
 				- (args->lowest - args->highest)));
@@ -59,7 +58,11 @@ static void	fdf(t_args *args, char **argv)
 {
 	args->vars->window = mlx_new_window
 		(args->vars->mlx, LENGTH, HEIGHT, argv[1]);
+	if (!args->vars->window)
+		exit_msg(args, "Problem with the window", 10, 1);
 	args->img->image = mlx_new_image(args->vars->mlx, LENGTH, HEIGHT);
+	if (!args->img->image)
+		exit_msg(args, "Problem with the image", 11, 1);
 	args->img->address = mlx_get_data_addr(args->img->image, &args->img->bpp,
 			&args->img->line_l, &args->img->endian);
 	print_map(args);
@@ -84,7 +87,7 @@ int	main(int argc, char **argv)
 		exit_msg(args, "Failed to alloc args", 0, 1);
 	args->colors = malloc(sizeof(t_colors));
 	if (!args->colors)
-		exit_msg(args, "Failed to alloc colors", 0, 1);
+		exit_msg(args, "Failed to alloc colors", 1, 1);
 	args->colors->i = 0;
 	args->colors->tab_size = 7;
 	parsing(argv, args);

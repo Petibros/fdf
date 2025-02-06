@@ -26,7 +26,7 @@ static void	fill_tab(t_args *args)
 	{
 		args->map[n] = malloc(args->size_x * sizeof(int));
 		if (!args->map[n])
-			exit_msg(args, "Failed to alloc tab", 1, 1);
+			exit_msg(args, "Failed to alloc tab", 7, 1);
 		put_in_tab(&args->file[i], args, args->map[n], n);
 		while (args->file[i] && args->file[i] != '\n')
 			++i;
@@ -47,11 +47,13 @@ static char	*read_map(t_args *args)
 	n_read = read(args->fd, buffer, 4095);
 	while (n_read)
 	{
+		if (!file)
+			exit_msg(args, "Malloc error whilst reading map", 3, 1);
 		buffer[n_read] = 0;
 		tmp = ft_strdup(file);
-		if (!tmp || !file)
-			exit_msg(args, "Malloc error whilst reading map", 1, 1);
 		free(file);
+		if (!tmp)
+			exit_msg(args, "Malloc error whilst reading map", 3, 1);
 		file = ft_strjoin(tmp, buffer);
 		free(tmp);
 		n_read = read(args->fd, buffer, 4095);
@@ -85,7 +87,7 @@ void	parsing(char **argv, t_args *args)
 {
 	args->fd = open(argv[1], O_RDONLY);
 	if (args->fd == -1)
-		exit_msg(args, "Invalid args->file", 0, 1);
+		exit_msg(args, "Invalid file", 2, 1);
 	args->size_y = 0;
 	args->highest = 0;
 	args->lowest = 0;
@@ -93,6 +95,6 @@ void	parsing(char **argv, t_args *args)
 	count_lines(args);
 	args->map = malloc(args->size_y * sizeof(int *));
 	if (!args->map)
-		exit_msg(args, "Failed to alloc map", 1, 1);
+		exit_msg(args, "Failed to alloc map", 4, 1);
 	fill_tab(args);
 }
