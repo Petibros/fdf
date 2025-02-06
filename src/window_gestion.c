@@ -25,11 +25,8 @@ void	center_map(t_args *args)
 
 int	close_window(t_args *args)
 {
-	mlx_destroy_window(args->vars->mlx, args->vars->window);
 	mlx_destroy_image(args->vars->mlx, args->img->image);
-	mlx_destroy_display(args->vars->mlx);
-	free(args->vars->mlx);
-	exit_msg(args, NULL, 1, 0);
+	exit_msg(args, NULL, 10, 0);
 	return (0);
 }
 
