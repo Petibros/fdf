@@ -23,14 +23,12 @@ void	zoom(t_args *args, int keycode)
 	if (keycode == ARROW_U || keycode == SCROLL_U)
 	{
 		args->scale *= scale_factor;
-		args->button = SCROLL_U;
 		args->start_x += (vector.x - vector.x * scale_factor);
 		args->start_y += (vector.y - vector.y * scale_factor);
 	}
 	else
 	{
 		args->scale /= scale_factor;
-		args->button = SCROLL_D;
 		args->start_x -= (vector.x - vector.x * scale_factor);
 		args->start_y -= (vector.y - vector.y * scale_factor);
 	}
@@ -84,13 +82,7 @@ int	mouse_gestion(int button, int x, int y, t_args *args)
 	if (button == MOUSE_R || button == MOUSE_L)
 		mouse_reset(x, y, args);
 	if (button == MOUSE_M)
-	{
 		center_map(args);
-		args->button = MOUSE_M;
-	}
-	else if (button == MOUSE_L)
-		args->button = MOUSE_L;
-	else if (button == MOUSE_R)
-		args->button = MOUSE_R;
+	args->button = button;
 	return (0);
 }

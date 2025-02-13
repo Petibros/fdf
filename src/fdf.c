@@ -42,6 +42,11 @@ static void	fdf(t_args *args, char **argv)
 		exit_msg(args, "Problem with the image", 10, 1);
 	args->img->address = mlx_get_data_addr(args->img->image, &args->img->bpp,
 			&args->img->line_l, &args->img->endian);
+	if (!args->img->address)
+	{
+		close_window(args);
+		perror("Problem getting the image's address");
+	}
 	print_map(args);
 	mlx_put_image_to_window(args->vars->mlx, args->vars->window,
 		args->img->image, 0, 0);
